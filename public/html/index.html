@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="icon" href="plik_iknony.png">
+    <link rel="icon" href="tukiedysikona.png">
     <meta name="description" content="Tu opis projektu kiedys">
 </head>
 <body>
@@ -13,32 +13,19 @@
 
 -->
 <div id="application">
-    <div id="header">
-        <h1>Chat</h1>
-    </div>
-    <div id="chats">
-        <div id="contacts">
-            <a href="">Antoni</a>
-        </div>
         <div id="chat">
-            <div id="messages">
-                <p class="message">Wiadomosc od osoby</p>
-                <p class="message sender">wiadomosc od ciebie</p>
-            </div>
-            <div id="input">
-                <input type="text" placeholder="Napisz wiadomość..." id="messageInput">
-                <a href="#" id="sendButton">Wyślij</a>
-            </div>
-
-
+            <div class="displayed-message">Antek to sigma</div>
         </div>
-        <div id="ads">
-            <h1>ads here</h1>
+        <div id="send-menu">
+            <label for="message">
+                Wiadomość:
+                <input id="message" type="text" placeholder="wiadomość...">
+            </label>
+            <button id="send-message" onclick="sendMessage()">Send</button>
         </div>
-    </div>
-
-
 </div>
+
+
 <script src="/socket.io/socket.io.js"></script>
 <script src="../js/script.js"></script>
 </body>
