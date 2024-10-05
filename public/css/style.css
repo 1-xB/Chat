@@ -18,8 +18,8 @@ html, body {
 }
 #application{
     border:2px solid black;
-    height:50%;
-    width:100%;
+    height:70%;
+    width:80%;
     display:flex;
     flex-direction: column;
 }
@@ -30,14 +30,42 @@ html, body {
 }
 .displayed-message{
     padding:15px;
-    margin:10px;
+    margin:15px;
     border-radius:20px;
     background-color:gray;
     font-weight:bold;
     color:white;
     display:inline-block;
 }
-S
+.message-holder{
+    width:100%;
+}
+#user-id{
+    width:100%;
+    height:10%;
+    background-color:gray;
+    color:white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight:bold;
+    text-align:center;
+}
+#loginForm{
+    border:2px solid black;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height:10%;
+    width:100%;
+}
+.showName{
+    font-weight:bold;
+    padding-left:3ch;
+    position:relative;
+    top:10px;
+}
+
 
 
 

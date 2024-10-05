@@ -9,12 +9,18 @@
     <meta name="description" content="Tu opis projektu kiedys">
 </head>
 <body>
-<!--
-
--->
 <div id="application">
+        <div id="loginForm">
+            <label for="nickName">Set a nickname</label>
+            <input id="nickName" type="text" placeholder="Your Nickname">
+            <button id="setNickname" onclick="addUser()">Login</button>
+        </div>
         <div id="chat">
-            <div class="displayed-message">Antek to sigma</div>
+            <div id="user-id">Connected as </div>
+            <div class="message-holder">
+                <div class="showName">daumian</div>
+                <div class="displayed-message">Antek to sigma</div>
+            </div>
         </div>
         <div id="send-menu">
             <label for="message">
