@@ -20,24 +20,40 @@ app.get("/", (req, res) => {
 
 // po połączeniu z serwerem
 io.on("connection", (socket => {
-        socket.emit('display-id', socket.id);
+    socket.emit('display-id', socket.id);
 
-        socket.on("log-in", (username) => {
-            if(users[username]){
-                socket.emit("wrong-username", username)
+    // dodanie użytkownika
+    socket.on("log-in", (username) => {
+        if(users[username]){
+            // wysłanie informacji o błędzie
+            socket.to(socket.id).emit("wrong-username", username)
+        }
+        else {
+            // dodanie użytkownika do listy
+            users[username] = {
+                id:socket.id
             }
-            else {
-                users[username] = {
-                    id:socket.id
-                }
-                socket.emit("correct-username", username)
-            }
-        });
-    // wysyłanie wiadomości
-    socket.on("send-message", (message,username) => {
-        // wysłanie wiadomości do wszystkich połączonych użytkowników oprócz osoby która wysyła.
-        socket.broadcast.emit("send-message", message,username);
+
+            // wysłanie informacji o poprawnym zalogowaniu
+            socket.to(socket.id).emit("correct-username", username)
+        }
+    });
+
+    // dołączanie do pokoju
+    socket.on("join-room",room=>{
+
+        // dołączenie do pokoju
+        socket.join(room)
+        //socket.to(room).emit("send-message", "Użytkownik dołączył do pokoju")
     })
+
+    // wysyłanie wiadomości
+    socket.on("send-message", (message, username,room) => {
+        // wysłanie wiadomości do wszystkich połączonych użytkowników oprócz osoby która wysyła.
+        socket.broadcast.to(room).emit("message", message, username)
+    })
+
+
 }))
 
 

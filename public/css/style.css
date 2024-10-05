@@ -62,6 +62,7 @@ html, body {
 .showName{
     font-weight:bold;
     padding-left:3ch;
+    text-align: inherit;
     position:relative;
     top:10px;
 }

@@ -18,12 +18,21 @@
         </div>
         <div id="chat">
             <div id="user-id">Connected as </div>
+            <div id="current-room">
+                Room code: <span id="room-code">none</span>
+            </div>
             <div class="message-holder">
                     <div class="showName">daumian</div>
                 <div class="displayed-message">Antek to sigma</div>
             </div>
         </div>
         <div id="send-menu">
+            <label for="room">
+                Room code:
+                <input id="room" type="text" placeholder="Room...">
+                <button id="join-room" onclick="joinRoom()">Join</button>
+            </label>
+            <br><br>
             <label for="message">
                 Wiadomość:
                 <input id="message" type="text" placeholder="wiadomość...">

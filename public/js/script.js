@@ -2,13 +2,16 @@
 const socket = io("http://localhost:3000");
 
 // inicjacja bloków z HTML
+
 const warning = document.getElementById("warning");
 const input = document.getElementById("message");
 const chatDiv = document.getElementById("chat");
 const user_id = document.getElementById("user-id");
 const user_name_input = document.getElementById("nickName");
-const user_name_get = document.getElementById("setNickname");
+const user_name_get = document.getElementById("setNickname")
+const room_input = document.getElementById("room");
 let username; // nazwa użytkownika
+let room;
 
 // po połączeniu z serverem.
 socket.on('connect' , ()=>{
@@ -39,10 +42,13 @@ socket.on("correct-username", (username)=>{
     user_id.textContent += ` and name: ${username}`;
 })
 
-// odbieranie wiadomości z servera
-socket.on("send-message", (msg,username)=> {
+// odebranie wiadomości
+socket.on("message", (msg,username) => {
+    // wiadomość
     const d = document.createElement("div")
+    // nazwa użytkownika
     const n = document.createElement("div")
+    // kontener dla wiadomości
     const h = document.createElement("div")
     chatDiv.append(h)
     h.append(n)
@@ -50,15 +56,21 @@ socket.on("send-message", (msg,username)=> {
     h.classList.add("message-holder")
     d.classList.add("displayed-message")
     n.classList.add("showName")
+    n.textContent = username
     d.textContent = msg
     n.textContent = username
 })
 
-// funkcja wysyłania wiadomości
-function sendMessage(){
-    const message = input.value
-    socket.emit("send-message", message,username)
+// funkcja dołączania do pokoju
+function joinRoom(){
+    room = room_input.value;
+    socket.emit("join-room",room)
+}
 
+// funkcja wysyłania wiadomości
+function sendMessage() {
+    const message = input.value
+    socket.emit("send-message", message, username, room);
     //wiadomosc
     const messageDiv = document.createElement("div")
     // nazwa
@@ -74,7 +86,10 @@ function sendMessage(){
     messageDiv.classList.add("displayed-message")
     nameDiv.classList.add("showName")
 
-    containerDiv.style.justifyContent = "right"
+    containerDiv.style.display = "flex";
+    containerDiv.style.justifyContent = "right";
+    messageDiv.style.backgroundColor = "#2ea3a3";
     messageDiv.textContent = message
     nameDiv.textContent = username
 }
+
