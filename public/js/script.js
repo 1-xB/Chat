@@ -30,18 +30,20 @@ function addUser() {
     socket.emit("log-in", username);
 }
 //wyswietlanie id uzytkownika
-socket.on('display-id',(id)=>{
-    user_id.textContent += id;
-})
+// socket.on('display-id',(id)=>{
+//     user_id.textContent += id;
+// })
+
 //zejęta nazwa użytkownika
 socket.on("wrong-username" ,(username)=>{
     warning.textContent = "Nazwa użytkownika już istnieje"
     username = null
     user_name_input.value = ""
+    isLogged = false;
+    isJoined = false;
 })
 //dobra nazwa użytkownika
 socket.on("correct-username", (username)=>{
-    user_id.textContent += ` and name: ${username}`;
     isLogged = true;
 })
 
@@ -79,16 +81,6 @@ function joinRoom(){
 
 // funkcja wysyłania wiadomości
 function sendMessage() {
-
-    if (!isLogged) {
-        warning.textContent = "You are not logged in!"
-        return
-    }
-    if (!isJoined) {
-        warning.textContent = "You are not in a room!"
-        return
-    }
-
     const message = input.value
     socket.emit("send-message", message, username, room);
     //wiadomosc
@@ -111,5 +103,7 @@ function sendMessage() {
     messageDiv.style.backgroundColor = "#2ea3a3";
     messageDiv.textContent = message
     nameDiv.textContent = username
+
+    message.value = "";
 }
 
