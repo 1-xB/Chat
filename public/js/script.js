@@ -2,15 +2,13 @@
 const socket = io("http://localhost:3000");
 
 // inicjacja bloków z HTML
+const warning = document.getElementById("warning");
 const input = document.getElementById("message");
 const chatDiv = document.getElementById("chat");
 const user_id = document.getElementById("user-id");
-const user_name = document.getElementById("nickName");
+const user_name_input = document.getElementById("nickName");
 const user_name_get = document.getElementById("setNickname");
 let username; // nazwa użytkownika
-let user = {
-
-}//użytkownicy
 
 // po połączeniu z serverem.
 socket.on('connect' , ()=>{
@@ -19,17 +17,27 @@ socket.on('connect' , ()=>{
 
 //ustawianie i zazpisywanie nazwy uzytkownika na serwerze
 function addUser() {
-    username = user_name.value;
+    username = user_name_input.value;
     if (!username) {
         username = "guest";
     }
-    user[socket.id] = {
-        name:username
-    }
-    user_id.textContent += ` and name: ${user[socket.id].name}`;
-    socket.emit("addUser", username,socket.id);
+    user_id.textContent += ` and name: ${username}`;
+    socket.emit("log-in", username);
 }
-
+//wyswietlanie id uzytkownika
+socket.on('display-id',(id)=>{
+    user_id.textContent += id;
+})
+//zejęta nazwa użytkownika
+socket.on("wrong-username" ,(username)=>{
+    warning.textContent = "Nazwa użytkownika już istnieje"
+    username = null
+    user_name_input.value = ""
+})
+//dobra nazwa użytkownika
+socket.on("correct-username", (username)=>{
+    user_id.textContent += ` and name: ${username}`;
+})
 
 // odbieranie wiadomości z servera
 socket.on("send-message", (msg,username)=> {
@@ -45,25 +53,28 @@ socket.on("send-message", (msg,username)=> {
     d.textContent = msg
     n.textContent = username
 })
-//wyswietlanie id uzytkownika
-socket.on('display-id',(id)=>{
-    user_id.textContent += id;
-})
 
 // funkcja wysyłania wiadomości
 function sendMessage(){
     const message = input.value
-    socket.emit("send-message", message,user[socket.id].name);
-    const d = document.createElement("div")
-    const n = document.createElement("div")
-    const h = document.createElement("div")
-    chatDiv.append(h)
-    h.append(n)
-    h.append(d)
-    h.classList.add("message-holder")
-    d.classList.add("displayed-message")
-    n.classList.add("showName")
-    h.style.justifyContent = "right"
-    d.textContent = message
-    n.textContent = user[socket.id].name
+    socket.emit("send-message", message,username)
+
+    //wiadomosc
+    const messageDiv = document.createElement("div")
+    // nazwa
+    const nameDiv = document.createElement("div")
+    // kontener
+    const containerDiv = document.createElement("div")
+
+    chatDiv.append(containerDiv)
+    containerDiv.append(nameDiv)
+    containerDiv.append(messageDiv)
+
+    containerDiv.classList.add("message-holder")
+    messageDiv.classList.add("displayed-message")
+    nameDiv.classList.add("showName")
+
+    containerDiv.style.justifyContent = "right"
+    messageDiv.textContent = message
+    nameDiv.textContent = username
 }

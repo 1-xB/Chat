@@ -65,6 +65,12 @@ html, body {
     position:relative;
     top:10px;
 }
+#warning{
+    text-align:center;
+    font-weight:bold;
+    padding:20px;
+    color:red;
+}
 
 
 
