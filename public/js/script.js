@@ -2,16 +2,18 @@
 const socket = io("http://localhost:3000");
 
 // inicjacja bloków z HTML
-
 const warning = document.getElementById("warning");
 const input = document.getElementById("message");
 const chatDiv = document.getElementById("chat");
-const user_id = document.getElementById("user-id");
+const user_info = document.getElementById("user-info");
 const user_name_input = document.getElementById("nickName");
-const user_name_get = document.getElementById("setNickname")
 const room_input = document.getElementById("room");
+const room_code_span = document.getElementById("room-code");
 let username; // nazwa użytkownika
 let room;
+
+let isLogged = false;
+let isJoined = false;
 
 // po połączeniu z serverem.
 socket.on('connect' , ()=>{
@@ -24,7 +26,7 @@ function addUser() {
     if (!username) {
         username = "guest";
     }
-    user_id.textContent += ` and name: ${username}`;
+    user_info.textContent = `Username: ${username}`;
     socket.emit("log-in", username);
 }
 //wyswietlanie id uzytkownika
@@ -40,6 +42,7 @@ socket.on("wrong-username" ,(username)=>{
 //dobra nazwa użytkownika
 socket.on("correct-username", (username)=>{
     user_id.textContent += ` and name: ${username}`;
+    isLogged = true;
 })
 
 // odebranie wiadomości
@@ -63,12 +66,29 @@ socket.on("message", (msg,username) => {
 
 // funkcja dołączania do pokoju
 function joinRoom(){
+    if (!isLogged) {
+        warning.textContent = "You are not logged in!"
+        return
+    }
+
     room = room_input.value;
     socket.emit("join-room",room)
+    isJoined = true;
+    room_code_span.textContent = room;
 }
 
 // funkcja wysyłania wiadomości
 function sendMessage() {
+
+    if (!isLogged) {
+        warning.textContent = "You are not logged in!"
+        return
+    }
+    if (!isJoined) {
+        warning.textContent = "You are not in a room!"
+        return
+    }
+
     const message = input.value
     socket.emit("send-message", message, username, room);
     //wiadomosc

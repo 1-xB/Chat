@@ -9,6 +9,7 @@ const io = new Server(server);
 
 let users = {}; //użytkownicy
 
+// serwowanie plików statycznych z katalogu 'public'
 app.use(express.static('public'));
 
 
@@ -24,9 +25,11 @@ io.on("connection", (socket => {
 
     // dodanie użytkownika
     socket.on("log-in", (username) => {
+        // sprawdzenie czy użytkownik o podanej nazwie już istnieje
         if(users[username]){
             // wysłanie informacji o błędzie
-            socket.to(socket.id).emit("wrong-username", username)
+            io.to(socket.id).emit("wrong-username", username)
+            console.log("Użytkownik o nazwie " + username + " już istnieje")
         }
         else {
             // dodanie użytkownika do listy
@@ -35,7 +38,7 @@ io.on("connection", (socket => {
             }
 
             // wysłanie informacji o poprawnym zalogowaniu
-            socket.to(socket.id).emit("correct-username", username)
+            io.to(socket.id).emit("correct-username", username)
         }
     });
 
@@ -51,6 +54,18 @@ io.on("connection", (socket => {
     socket.on("send-message", (message, username,room) => {
         // wysłanie wiadomości do wszystkich połączonych użytkowników oprócz osoby która wysyła.
         socket.broadcast.to(room).emit("message", message, username)
+    })
+
+    // rozłączenie użytkownika
+    socket.on("disconnect", () => {
+        // usunięcie użytkownika z listy
+        for (let name in users) {
+            if (users[name].id === socket.id) {
+                console.log("Użytkownik " + name + " się rozłączył")
+                delete users[name];
+                break;
+            }
+        }
     })
 
 

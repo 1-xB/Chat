@@ -11,37 +11,37 @@
 <body>
 <div id="application">
     <p id="warning"></p>
-        <div id="loginForm">
-            <label for="nickName">Set a nickname</label>
+    <div id="loginForm">
+        <label for="nickName">
+            Set a nickname:
             <input id="nickName" type="text" placeholder="Your Nickname">
-            <button id="setNickname" onclick="addUser()">Login</button>
+        </label>
+        <button id="setNickname" onclick="addUser()">Login</button>
+    </div>
+
+    <div id="chat">
+        <div id="user-info">Log in to chat!</div>
+        <div id="current-room">
+            Room code: <span id="room-code">none</span>
         </div>
-        <div id="chat">
-            <div id="user-id">Connected as </div>
-            <div id="current-room">
-                Room code: <span id="room-code">none</span>
-            </div>
-            <div class="message-holder">
-                    <div class="showName">daumian</div>
-                <div class="displayed-message">Antek to sigma</div>
-            </div>
+        <div class="message-holder">
+            <div class="showName">daumian</div>
+            <div class="displayed-message">Antek to sigma</div>
         </div>
-        <div id="send-menu">
-            <label for="room">
-                Room code:
-                <input id="room" type="text" placeholder="Room...">
-                <button id="join-room" onclick="joinRoom()">Join</button>
-            </label>
-            <br><br>
-            <label for="message">
-                Wiadomość:
-                <input id="message" type="text" placeholder="wiadomość...">
-            </label>
+    </div>
+    <div id="send-menu">
+        <label for="room">
+            Room code:
+            <input id="room" type="text" placeholder="1234">
+            <button id="join-room" onclick="joinRoom()">Join</button>
+        </label>
+        <label for="message">
+            Message:
+            <input id="message" type="text" placeholder="Have a nice day...">
             <button id="send-message" onclick="sendMessage()">Send</button>
-        </div>
+        </label>
+    </div>
 </div>
-
-
 <script src="/socket.io/socket.io.js"></script>
 <script src="../js/script.js"></script>
 </body>
