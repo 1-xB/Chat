@@ -46,7 +46,7 @@ socket.on("wrong-username" ,(username)=>{
     isJoined = false;
 })
 //dobra nazwa użytkownika
-socket.on("correct-username", (username)=>{
+socket.on("correct-username", ()=>{
     isLogged = true;
 })
 
