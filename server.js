@@ -61,7 +61,7 @@ io.on("connection", (socket => {
         // usunięcie użytkownika z listy
         for (let name in users) {
             if (users[name].id === socket.id) {
-                console.log("Użytkownik " + name + " się rozłączył")
+                socket.emit("disconnected",name)
                 delete users[name];
                 break;
             }

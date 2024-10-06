@@ -9,8 +9,11 @@ const user_info = document.getElementById("user-info");
 const user_name_input = document.getElementById("nickName");
 const room_input = document.getElementById("room");
 const room_code_span = document.getElementById("room-code");
+const notification_on_user_disconnect = document.getElementById("notification-disconnect");
+let messageWidth;
 let username; // nazwa użytkownika
-let room;
+let room = "public";
+socket.emit("join-room",room)
 
 let isLogged = false;
 let isJoined = false;
@@ -64,6 +67,9 @@ socket.on("message", (msg,username) => {
     n.textContent = username
     d.textContent = msg
     n.textContent = username
+
+    //automatyczne przewijanie suwaka do osttaniej wiadomosci
+    chatDiv.scrollTop = chatDiv.scrollHeight;
 })
 
 // funkcja dołączania do pokoju
@@ -72,12 +78,16 @@ function joinRoom(){
         warning.textContent = "You are not logged in!"
         return
     }
-
     room = room_input.value;
     socket.emit("join-room",room)
     isJoined = true;
     room_code_span.textContent = room;
 }
+socket.on("disconnected",name=>{
+    notification_on_user_disconnect.textContent = `user ${name} disconnected`
+    notification_on_user_disconnect.style.width = "100%"
+    notification_on_user_disconnect.style.backgroundColor = "red"
+})
 
 // funkcja wysyłania wiadomości
 function sendMessage() {
@@ -102,8 +112,13 @@ function sendMessage() {
     containerDiv.style.justifyContent = "right";
     messageDiv.style.backgroundColor = "#2ea3a3";
     messageDiv.textContent = message
-    nameDiv.textContent = username
+    messageWidth = messageDiv.clientWidth;
+    nameDiv.textContent = "You";
+    nameDiv.style.left = messageWidth + "px";
+    nameDiv.style.top = "-5px";
+
+    //automatyczne przewijanie suwaka do osttaniej wiadomosci
+    chatDiv.scrollTop = chatDiv.scrollHeight;
 
     message.value = "";
 }
-
