@@ -3,7 +3,7 @@ const socket = io("http://localhost:3000");
 
 // inicjacja bloków z HTML
 const warning = document.getElementById("warning");
-const input = document.getElementById("message");
+const message_input = document.getElementById("message");
 const chatDiv = document.getElementById("chat");
 const user_info = document.getElementById("user-info");
 const user_name_input = document.getElementById("nickName");
@@ -24,11 +24,16 @@ socket.on('connect' , ()=>{
 })
 
 //ustawianie i zazpisywanie nazwy uzytkownika na serwerze
-function addUser() {
+function LogIn() {
     username = user_name_input.value;
     if (!username) {
         username = "guest";
     }
+    room = "public"
+    room_input.value = room;
+    room_code_span.textContent = room;
+    isJoined = true;
+
     user_info.textContent = `Username: ${username}`;
     socket.emit("log-in", username);
 }
@@ -61,9 +66,12 @@ socket.on("message", (msg,username) => {
     chatDiv.append(h)
     h.append(n)
     h.append(d)
+
+    // dodanie klas
     h.classList.add("message-holder")
     d.classList.add("displayed-message")
     n.classList.add("showName")
+
     n.textContent = username
     d.textContent = msg
     n.textContent = username
@@ -91,7 +99,26 @@ socket.on("disconnected",name=>{
 
 // funkcja wysyłania wiadomości
 function sendMessage() {
-    const message = input.value
+    const message = message_input.value
+
+    // sprawdzenie czy użytkownik jest zalogowany
+    if (!isLogged) {
+        warning.textContent = "You are not logged in!"
+        return
+    }
+
+    // sprawdzenie czy użytkownik jest w pokoju
+    if (!isJoined) {
+        warning.textContent = "You are not in any room!"
+        return
+    }
+
+    // sprawdzenie czy wiadomość nie jest pusta
+    if (!message) {
+        warning.textContent = "Message is empty!"
+        return
+    }
+
     socket.emit("send-message", message, username, room);
     //wiadomosc
     const messageDiv = document.createElement("div")
@@ -100,14 +127,18 @@ function sendMessage() {
     // kontener
     const containerDiv = document.createElement("div")
 
+
+    // dodanie elementów do HTML
     chatDiv.append(containerDiv)
     containerDiv.append(nameDiv)
     containerDiv.append(messageDiv)
 
+    // dodanie klas
     containerDiv.classList.add("message-holder")
     messageDiv.classList.add("displayed-message")
     nameDiv.classList.add("showName")
 
+    // ustawienie stylów
     containerDiv.style.display = "flex";
     containerDiv.style.justifyContent = "right";
     messageDiv.style.backgroundColor = "#2ea3a3";
@@ -120,5 +151,6 @@ function sendMessage() {
     //automatyczne przewijanie suwaka do osttaniej wiadomosci
     chatDiv.scrollTop = chatDiv.scrollHeight;
 
-    message.value = "";
+    // czyszczenie inputa
+    message_input.value = "";
 }
