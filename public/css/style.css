@@ -139,3 +139,23 @@ html, body {
     height:10%;
     font-weight:bold;
 }
+#users-list{
+    width:100%;
+    height:20%;
+    background-color:black;
+    color:white;
+}
+.list-username{
+    color:white;
+    font-weight:bold;
+}
+.isTyping{
+    color: #ffffff;
+    font-weight:bold;
+    background-color: #0c0c0c;
+    border-radius: 10px;
+    display: inline-block;
+    position:relative;
+    bottom:130%;
+    padding:10px;
+}
